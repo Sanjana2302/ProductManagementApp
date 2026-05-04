@@ -112,7 +112,7 @@ const StockControl = () => {
           </h1>
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="md:hidden bg-indigo-600 text-white p-2.5 rounded-xl shadow-lg active:scale-95"
+            className="md:hidden bg-orange-500 text-white p-2.5 rounded-xl shadow-lg active:scale-95"
           >
             <Plus size={20} />
           </button>
@@ -128,12 +128,12 @@ const StockControl = () => {
               type="text"
               placeholder={isListening ? "Listening..." : "Search products..."}
               value={searchTerm}
-              className={`w-full pl-10 pr-12 py-2.5 rounded-xl outline-none text-sm font-medium transition-all border ${isListening ? "bg-indigo-50 border-indigo-300 ring-4 ring-indigo-100" : "bg-slate-50 border-slate-100 focus:bg-white focus:border-indigo-500"}`}
+              className={`w-full pl-10 pr-12 py-2.5 rounded-xl outline-none text-sm font-medium transition-all border ${isListening ? "bg-orange-50 border-orange-300 ring-4 ring-orange-100" : "bg-slate-50 border-slate-100 focus:bg-white focus:border-orange-500"}`}
               onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
             />
             <button
               onClick={handleVoiceSearch}
-              className={`absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg transition-all ${isListening ? "bg-indigo-600 text-white animate-pulse" : "text-slate-400 hover:text-indigo-600 hover:bg-indigo-50"}`}
+              className={`absolute right-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg transition-all ${isListening ? "bg-orange-500 text-white animate-pulse" : "text-slate-400 hover:text-orange-500 hover:bg-orange-50"}`}
             >
               <Mic size={16} />
             </button>
@@ -141,7 +141,7 @@ const StockControl = () => {
 
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="hidden md:flex bg-slate-950 text-white px-6 py-2.5 rounded-xl font-bold text-sm items-center gap-2 hover:bg-black shadow-xl"
+            className="hidden md:flex bg-orange-500 text-white px-6 py-2.5 rounded-xl font-bold text-sm items-center gap-2 hover:bg-orange-600 shadow-lg shadow-orange-100"
           >
             <Plus size={18} /> Add New
           </button>
@@ -201,7 +201,7 @@ const StockControl = () => {
                                 setEditingProduct(product);
                                 setIsEditModalOpen(true);
                               }}
-                              className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg"
+                              className="p-2 text-slate-400 hover:text-orange-500 hover:bg-orange-50 rounded-lg"
                             >
                               <Edit3 size={16} />
                             </button>
@@ -210,7 +210,7 @@ const StockControl = () => {
                                 setProductToDelete(product);
                                 setIsDeleteModalOpen(true);
                               }}
-                              className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg"
+                              className="p-2 text-slate-400 hover:text-orange-500 hover:bg-orange-50 rounded-lg"
                             >
                               <Trash2 size={16} />
                             </button>
@@ -265,7 +265,7 @@ const StockControl = () => {
                   required
                 />
               </div>
-              <button className="w-full bg-slate-950 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 mt-4 active:scale-95">
+              <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 mt-4 active:scale-95 transition-all">
                 <Save size={18} /> Save Product
               </button>
             </form>
@@ -274,7 +274,7 @@ const StockControl = () => {
 
         {isEditModalOpen && editingProduct && (
           <Modal close={() => setIsEditModalOpen(false)} title="Edit Product">
-            <form onSubmit={handleSaveEdit} className="space-y-4">
+            <form onSubmit={handleSaveEdit} className="space-y-3">
               <Input
                 label="Product Name"
                 defaultValue={editingProduct.name}
@@ -282,26 +282,40 @@ const StockControl = () => {
                   setEditingProduct({ ...editingProduct, name: e.target.value })
                 }
               />
-              <div className="flex justify-between p-5 bg-slate-50 rounded-2xl items-center border border-slate-100">
+              <div className="grid grid-cols-2 gap-3">
+                <Input
+                  label="Price ($)"
+                  type="number"
+                  step="0.01"
+                  defaultValue={editingProduct.price}
+                  onChange={(e) =>
+                    setEditingProduct({
+                      ...editingProduct,
+                      price: parseFloat(e.target.value),
+                    })
+                  }
+                />
+                <Input
+                  label="Add Qty"
+                  type="number"
+                  placeholder="Qty to add..."
+                  onChange={(e) =>
+                    setEditingProduct({
+                      ...editingProduct,
+                      addStock: e.target.value,
+                    })
+                  }
+                />
+              </div>
+              <div className="flex justify-between px-4 py-3 bg-slate-50 rounded-xl items-center border border-slate-100">
                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
                   Current Stock
                 </span>
-                <span className="text-2xl font-black text-slate-900">
+                <span className="text-xl font-black text-slate-900">
                   {editingProduct.stock}
                 </span>
               </div>
-              <Input
-                label="Add Qty"
-                type="number"
-                placeholder="Enter qty to add..."
-                onChange={(e) =>
-                  setEditingProduct({
-                    ...editingProduct,
-                    addStock: e.target.value,
-                  })
-                }
-              />
-              <button className="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-indigo-100 active:scale-95">
+              <button className="w-full bg-orange-500 hover:bg-orange-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-orange-100 active:scale-95 transition-all">
                 Confirm Update
               </button>
             </form>
@@ -309,38 +323,32 @@ const StockControl = () => {
         )}
 
         {isDeleteModalOpen && productToDelete && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/20 backdrop-blur-sm">
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="bg-white w-full max-w-sm rounded-3xl p-8 shadow-2xl"
-            >
-              <h2 className="text-xl font-black text-slate-900 mb-2">
-                Delete Product?
-              </h2>
-              <p className="text-sm text-slate-500 mb-6">
-                Do you want to delete{" "}
-                <span className="font-bold text-slate-900">
-                  {productToDelete.name}
-                </span>
-                ?
-              </p>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setIsDeleteModalOpen(false)}
-                  className="flex-1 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold"
-                >
-                  No
-                </button>
-                <button
-                  onClick={handleDelete}
-                  className="flex-1 py-3 bg-rose-600 text-white rounded-xl font-bold"
-                >
-                  Yes
-                </button>
-              </div>
-            </motion.div>
-          </div>
+          <Modal
+            close={() => setIsDeleteModalOpen(false)}
+            title="Delete Product?"
+          >
+            <p className="text-sm text-slate-500 mb-6">
+              Do you want to delete{" "}
+              <span className="font-bold text-slate-900">
+                {productToDelete.name}
+              </span>
+              ?
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="flex-1 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition-all"
+              >
+                No
+              </button>
+              <button
+                onClick={handleDelete}
+                className="flex-1 py-3 bg-orange-500 hover:bg-orange-600 text-white rounded-xl font-bold transition-all"
+              >
+                Yes, Delete
+              </button>
+            </div>
+          </Modal>
         )}
       </AnimatePresence>
     </div>
@@ -377,7 +385,7 @@ const Input = ({ label, ...props }) => (
     </label>
     <input
       {...props}
-      className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:bg-white focus:border-indigo-500 outline-none font-bold text-slate-800"
+      className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-xl focus:bg-white focus:border-orange-500 outline-none font-bold text-slate-800"
     />
   </div>
 );
