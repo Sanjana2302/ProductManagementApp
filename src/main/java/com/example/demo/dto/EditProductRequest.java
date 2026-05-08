@@ -15,6 +15,6 @@ public class EditProductRequest {
     @DecimalMin("0.01")
     private BigDecimal price;
 
-    @Min(0)
-    private int addStockQty;
+    // Can be positive (restock) or negative (sell)
+    private Integer addStockQty;
 }

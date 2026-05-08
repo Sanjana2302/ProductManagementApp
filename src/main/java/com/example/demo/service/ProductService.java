@@ -52,7 +52,18 @@ public class ProductService {
 
         product.setName(sanitize(req.getName()));
         product.setPrice(req.getPrice());
-        product.setStockQty(product.getStockQty() + req.getAddStockQty());
+        
+        // Handle stock change (positive = restock, negative = sell)
+        if (req.getAddStockQty() != null && req.getAddStockQty() != 0) {
+            int newQty = product.getStockQty() + req.getAddStockQty();
+            
+            // Prevent stock going below 0
+            if (newQty < 0) {
+                throw new AppException("Cannot sell more than available stock. Current stock: " + product.getStockQty(), HttpStatus.BAD_REQUEST);
+            }
+            product.setStockQty(newQty);
+        }
+        
         productRepository.save(product);
         log(user, "EDITED", product.getName());
         return toResponse(product);
