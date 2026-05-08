@@ -6,24 +6,38 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // blocks render until we know auth state
+  const [loading, setLoading] = useState(true);
 
-  // On every page load/refresh — silently try to get new access token using HTTP-only cookie
   useEffect(() => {
     const silentRefresh = async () => {
+      const storedUser = localStorage.getItem("user");
+
+      // no user in storage at all — no point calling refresh
+      if (!storedUser) {
+        setLoading(false);
+        return;
+      }
+
       try {
         const { data } = await axios.post(
           "http://localhost:8080/api/auth/refresh",
           {},
-          { withCredentials: true }
+          { withCredentials: true, timeout: 8000 } // 8s timeout
         );
         localStorage.setItem("accessToken", data.accessToken);
-        const stored = localStorage.getItem("user");
-        if (stored) setUser(JSON.parse(stored));
-      } catch {
-        // refresh token expired or invalid — clear everything
-        localStorage.clear();
-        setUser(null);
+        setUser(JSON.parse(storedUser));
+      } catch (err) {
+        const status = err.response?.status;
+
+        if (status === 401) {
+          // refresh token truly expired — logout
+          localStorage.clear();
+          setUser(null);
+        } else {
+          // network error, BE down, timeout — keep user logged in
+          // accessToken in localStorage may still be valid
+          setUser(JSON.parse(storedUser));
+        }
       } finally {
         setLoading(false);
       }
@@ -54,7 +68,6 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  // show nothing until silent refresh completes — prevents flash of login page
   if (loading) return null;
 
   return (

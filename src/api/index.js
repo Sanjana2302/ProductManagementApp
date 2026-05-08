@@ -9,6 +9,7 @@ export const resetPasswordApi = (data) => api.post("/auth/reset-password", data)
 
 // Products
 export const getProductsApi = (search = "") => api.get(`/products?search=${search}`);
+export const getAllProductsSortedApi = () => api.get(`/products?search=&sort=name&order=asc`);
 export const addProductApi = (data) => api.post("/products", data);
 export const editProductApi = (id, data) => api.put(`/products/${id}`, data);
 export const deleteProductApi = (id) => api.delete(`/products/${id}`);

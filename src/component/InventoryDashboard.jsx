@@ -177,7 +177,7 @@ const InventoryDashboard = () => {
                             <span className="ml-2 text-[10px] font-black text-rose-500 bg-rose-50 px-2 py-0.5 rounded-full uppercase">Low Stock</span>
                           )}
                         </td>
-                        <td className="px-6 py-5 text-center text-sm font-medium text-slate-500">${product.price}</td>
+                        <td className="px-6 py-5 text-center text-sm font-medium text-slate-500">₹{product.price}</td>
                         <td className="px-6 py-5 text-center">
                           <span className={`text-base font-black ${product.lowStock ? "text-rose-500" : "text-slate-900"}`}>
                             {product.stockQty}
